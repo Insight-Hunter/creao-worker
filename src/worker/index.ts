@@ -1,6 +1,22 @@
-import { Hono } from "hono";
-const app = new Hono<{ Bindings: Env }>();
+addEventListener('fetch', event => {
+  event.respondWith(handleRequest(event.request))
+})
 
-app.get("/api/", (c) => c.json({ name: "Cloudflare" }));
+const CREAO_ACCESS_TOKEN = 'OHAwMipcZ1FcYWhncXcYCQwLImJoJX8XCRUPc2YnbH5MXQoVc2RydSlIDlkPdGN3Y2MMTFlLKA0sJW0UGg4BcWchJH8dCA0IdWBzdnccWQFcezB3JG0CGkhKLDggIjtxUVwaeXBzeH0bWQ4LcmtycywWCAoOdWZwIHgeCVwaPg=='
 
-export default app;
+async function handleRequest(request) {
+  const url = `https://api-production.creao.ai/data/mcp/sse?creao_access_token=${CREAO_ACCESS_TOKEN}`
+
+  const response = await fetch(url, {
+    headers: { 'Accept': 'text/event-stream' },
+  })
+
+  return new Response(response.body, {
+    status: response.status,
+    headers: {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      'Connection': 'keep-alive',
+    },
+  })
+}
