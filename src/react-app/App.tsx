@@ -1,29 +1,41 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 
-const WORKER_URL = 'https://creao-worker.dmco.workers.dev'
+// Define the interface for your stream data
+interface StreamItem {
+  id: string;
+  message: string;
+  // Add other fields as needed
+}
+
+const WORKER_URL = 'https://creao-worker.dmco.workers.dev';
 
 function App() {
-  const [streamData, setStreamData] = useState([])
+  const [streamData, setStreamData] = useState<StreamItem[]>([]);
 
   useEffect(() => {
-    const eventSource = new EventSource(WORKER_URL)
+    const eventSource = new EventSource(WORKER_URL);
 
     eventSource.onmessage = (event) => {
       try {
-        const data = JSON.parse(event.data)
-        setStreamData(prev => [...prev, data])
+        const data = JSON.parse(event.data);
+        // Type guard: check if data matches StreamItem
+        if (isStreamItem(data)) {
+          setStreamData(prev => [...prev, data]);
+        } else {
+          console.warn('Received data does not match expected structure:', data);
+        }
       } catch (e) {
-        console.error('Error parsing SSE:', e)
+        console.error('Error parsing SSE:', e);
       }
-    }
+    };
 
     eventSource.onerror = (error) => {
-      console.error('SSE error:', error)
-      eventSource.close()
-    }
+      console.error('SSE error:', error);
+      eventSource.close();
+    };
 
-    return () => eventSource.close()
-  }, [])
+    return () => eventSource.close();
+  }, []);
 
   return (
     <div>
@@ -34,7 +46,18 @@ function App() {
         ))}
       </ul>
     </div>
-  )
+  );
 }
 
-export default App
+// Type guard function to validate StreamItem
+function isStreamItem(obj: any): obj is StreamItem {
+  return (
+    typeof obj === 'object' &&
+    obj !== null &&
+    typeof obj.id === 'string' &&
+    typeof obj.message === 'string'
+    // Add checks for other required fields
+  );
+}
+
+export default App;
