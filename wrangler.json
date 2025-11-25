@@ -11,5 +11,16 @@
   "assets": {
     "directory": "public",
     "not_found_handling": "single-page-application"
+  },
+  "build": {
+    "command": "npm run build"
+  },
+  "build.upload": {
+     "format": "modules"
+  },
+  "build.upload.rules": {
+     "type": "ESModule",
+     "globs":  "**/*.js",
+     "exclude": "web-streams-polyfill/ponyfill"
   }
 }
