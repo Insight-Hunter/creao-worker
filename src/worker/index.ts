@@ -1,11 +1,8 @@
 // src/worker/index.ts
 
-import { ReadableStream } from 'web-streams-polyfill/ponyfill';
-
 export default {
-  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+  async fetch(_request: Request, _env: Env, _ctx: ExecutionContext): Promise<Response> {
     const CREAO_ACCESS_TOKEN = 'OHAwMipcZ1FcYWhncXcYCQwLImJoJX8XCRUPc2YnbH5MXQoVc2RydSlIDlkPdGN3Y2MMTFlLKA0sJW0UGg4BcWchJH8dCA0IdWBzdnccWQFcezB3JG0CGkhKLDggIjtxUVwaeXBzeH0bWQ4LcmtycywWCAoOdWZwIHgeCVwaPg==';
-
     const url = `https://api-production.creao.ai/data/mcp/sse?creao_access_token=${CREAO_ACCESS_TOKEN}`;
 
     try {
@@ -13,9 +10,12 @@ export default {
         headers: { 'Accept': 'text/event-stream' },
       });
 
-      // Use ReadableStream polyfill for streaming
+      if (!response.body) {
+        throw new Error('Response body is null');
+      }
+
       const stream = new ReadableStream({
-        async start(controller) {
+        async start(controller: ReadableStreamDefaultController) {
           const reader = response.body.getReader();
           while (true) {
             const { done, value } = await reader.read();
