@@ -5,12 +5,11 @@ export default {
 
     try {
       const response = await fetch(url, {
-        headers: { 'Accept': 'text/event-stream' },
+        if (!response.body) {
+           throw new Error('Response body is null'), 
+           headers: { 'Accept': 'text/event-stream' }
+           }
       });
-
-      if (!response.body) {
-        throw new Error('Response body is null');
-      }
 
       const stream = new ReadableStream({
         async start(controller: ReadableStreamDefaultController) {
