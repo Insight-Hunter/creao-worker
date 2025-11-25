@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
-// Define the interface for your stream data
+const WORKER_URL = 'https://creao-worker.dmco.workers.dev';
+
 interface StreamItem {
   id: string;
   message: string;
-  // Add other fields as needed
 }
-
-const WORKER_URL = 'https://creao-worker.dmco.workers.dev';
 
 function App() {
   const [streamData, setStreamData] = useState<StreamItem[]>([]);
@@ -18,7 +16,6 @@ function App() {
     eventSource.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        // Type guard: check if data matches StreamItem
         if (isStreamItem(data)) {
           setStreamData(prev => [...prev, data]);
         } else {
@@ -49,14 +46,12 @@ function App() {
   );
 }
 
-// Type guard function to validate StreamItem
 function isStreamItem(obj: any): obj is StreamItem {
   return (
     typeof obj === 'object' &&
     obj !== null &&
     typeof obj.id === 'string' &&
     typeof obj.message === 'string'
-    // Add checks for other required fields
   );
 }
 
