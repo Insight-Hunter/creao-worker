@@ -1,5 +1,7 @@
 // src/worker/index.ts
 
+import { ReadableStream } from 'web-streams-polyfill/ponyfill';
+
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const CREAO_ACCESS_TOKEN = 'OHAwMipcZ1FcYWhncXcYCQwLImJoJX8XCRUPc2YnbH5MXQoVc2RydSlIDlkPdGN3Y2MMTFlLKA0sJW0UGg4BcWchJH8dCA0IdWBzdnccWQFcezB3JG0CGkhKLDggIjtxUVwaeXBzeH0bWQ4LcmtycywWCAoOdWZwIHgeCVwaPg==';
@@ -11,7 +13,22 @@ export default {
         headers: { 'Accept': 'text/event-stream' },
       });
 
-      return new Response(response.body, {
+      // Use ReadableStream polyfill for streaming
+      const stream = new ReadableStream({
+        async start(controller) {
+          const reader = response.body.getReader();
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) {
+              controller.close();
+              break;
+            }
+            controller.enqueue(value);
+          }
+        },
+      });
+
+      return new Response(stream, {
         status: response.status,
         headers: {
           'Content-Type': 'text/event-stream',
