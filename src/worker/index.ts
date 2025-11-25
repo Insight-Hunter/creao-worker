@@ -14,7 +14,7 @@ export default {
 
       const stream = new ReadableStream({
         async start(controller: ReadableStreamDefaultController) {
-          const reader = response.body.getReader(); // TypeScript now knows body is not null
+          const reader = (response.body as ReadableStream).getReader();
           while (true) {
             const { done, value } = await reader.read();
             if (done) {
