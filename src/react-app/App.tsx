@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import _React, { useEffect, useState } from 'react';
 
 const WORKER_URL = 'https://creao-worker.dmco.workers.dev';
 
