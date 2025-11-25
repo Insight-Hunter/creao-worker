@@ -1,26 +1,24 @@
-{
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "creao-worker",
-  "main": "./src/worker/index.ts",
-  "compatibility_date": "2025-10-08",
-  "compatibility_flags": ["nodejs_compat"],
-  "observability": {
-    "enabled": true
-  },
-  "upload_source_maps": true,
-  "assets": {
-    "directory": "public",
-    "not_found_handling": "single-page-application"
-  },
-  "build": {
-    "command": "npm run build"
-  },
-  "build.upload": {
-     "format": "modules"
-  },
-  "build.upload.rules": {
-     "type": "ESModule",
-     "globs":  "**/*.js",
-     "exclude": "web-streams-polyfill/ponyfill"
-  }
-}
+name = "creao-worker"
+main = "./src/worker/index.ts"
+compatibility_date = "2025-10-08"
+compatibility_flags = ["nodejs_compat"]
+
+[observability]
+enabled = true
+
+upload_source_maps = true
+
+[assets]
+directory = "public"
+not_found_handling = "single-page-application"
+
+[build]
+command = "npm run build"
+
+[build.upload]
+format = "modules"
+
+[[build.upload.rules]]
+type = "ESModule"
+globs = ["**/*.js"]
+exclude = ["web-streams-polyfill/ponyfill"]
