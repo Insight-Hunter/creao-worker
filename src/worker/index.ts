@@ -1,5 +1,3 @@
-// src/worker/index.ts
-
 export default {
   async fetch(_request: Request, _env: Env, _ctx: ExecutionContext): Promise<Response> {
     const CREAO_ACCESS_TOKEN = 'OHAwMipcZ1FcYWhncXcYCQwLImJoJX8XCRUPc2YnbH5MXQoVc2RydSlIDlkPdGN3Y2MMTFlLKA0sJW0UGg4BcWchJH8dCA0IdWBzdnccWQFcezB3JG0CGkhKLDggIjtxUVwaeXBzeH0bWQ4LcmtycywWCAoOdWZwIHgeCVwaPg==';
